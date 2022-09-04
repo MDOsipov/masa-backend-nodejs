@@ -1,0 +1,32 @@
+{
+  "name": "masa-backend-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "source/server.ts",
+  "scripts": {
+    "dev": "nodemon source/server.ts",
+    "build": "rm -rf build/ && prettier --write source/ && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MDOsipov/masa-backend-nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MDOsipov/masa-backend-nodejs/issues"
+  },
+  "homepage": "https://github.com/MDOsipov/masa-backend-nodejs#readme",
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/express": "^4.17.13",
+    "@types/morgan": "^1.9.3",
+    "axios": "^0.27.2",
+    "express": "^4.18.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.2"
+  }
+}

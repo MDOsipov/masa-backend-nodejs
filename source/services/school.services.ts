@@ -63,7 +63,7 @@ export class SchoolService implements ISchoolService {
                     reject(ErrorHelper.parseError(ErrorCodes.ConnectionError, General.DbconnectionError));
                 }
                 else {
-                    connection.query(query, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
+                    connection.query(`${query} ${id}`, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
                         if (queryError) {
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }

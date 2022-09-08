@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const constants_1 = require("../constants");
 const school_services_1 = require("../services/school.services");
 const schoolService = new school_services_1.SchoolService();
 const getBoardTypes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -17,6 +18,18 @@ const getBoardTypes = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         return res.status(200).json({
             message: result
         });
+    })
+        .catch((error) => {
+        switch (error.code) {
+            case constants_1.ErrorCodes.ConnectionError:
+                return res.status(408).json({
+                    errorMessage: error.message
+                });
+            default:
+                return res.status(400).json({
+                    errorMessage: error.message
+                });
+        }
     });
 });
 exports.default = { getBoardTypes };

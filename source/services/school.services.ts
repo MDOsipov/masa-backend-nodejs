@@ -18,28 +18,37 @@ export class SchoolService implements ISchoolService {
             const sql: SqlClient = require("msnodesqlv8");
 
             const connectionString: string = "server=.;Database=masa_school;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
-            const query: string = "SELECT * FROM white_board_type";
+            const query: string = "SELEC * FROM white_board_type";
 
             sql.open(connectionString, (connectionError: Error, connection: Connection) => {
                 // Например, сервер не работает
-                if (connectionError !== null) {
+                if (connectionError) {
                     const error: systemError = {
                         code: ErrorCodes.ConnectionError,
                         message: "SQL server connection error"
                     }
-                    reject("Connection error!");
+                    reject(error);
                 }
                 else {
                     connection.query(query, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
-                        const result: whiteBoardType[] = [];
-                        if (queryResult !== undefined) {
-                            queryResult.forEach(whiteBoardType => {
-                                result.push(
-                                    this.parseLocalBoardType(whiteBoardType)
-                                )
-                            });
+                        if (queryError) {
+                            const error: systemError = {
+                                code: ErrorCodes.queryError,
+                                message: "Incorrect query"
+                            };
+                            reject(error);
                         }
-                        resolve(result);
+                        else {
+                            const result: whiteBoardType[] = [];
+                            if (queryResult !== undefined) {
+                                queryResult.forEach(whiteBoardType => {
+                                    result.push(
+                                        this.parseLocalBoardType(whiteBoardType)
+                                    )
+                                });
+                            }
+                            resolve(result);
+                        }
                     })
                 }
             });

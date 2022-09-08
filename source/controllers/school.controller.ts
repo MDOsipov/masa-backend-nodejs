@@ -18,6 +18,10 @@ const getBoardTypes = async (req: Request, res: Response, next: NextFunction) =>
                     return res.status(408).json({
                         errorMessage: error.message
                     });
+                case ErrorCodes.queryError:
+                    return res.status(406).json({
+                        errorMessage: error.message
+                    });
                 default:
                     return res.status(400).json({
                         errorMessage: error.message

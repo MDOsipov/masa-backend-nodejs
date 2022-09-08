@@ -1,6 +1,7 @@
 import { Connection, SqlClient, Error } from "msnodesqlv8";
-import { whiteBoardType, systemError } from "../entities";
-import { ErrorCodes } from "../constants";
+import { whiteBoardType } from "../entities";
+import { ErrorCodes, General, DB_CONNECTION_STRING, Queries } from "../constants";
+import { ErrorHelper } from "../helpers/error.helpers";
 
 interface localWhiteBoardType {
     id: number;
@@ -17,26 +18,18 @@ export class SchoolService implements ISchoolService {
             const result: whiteBoardType[] = [];
             const sql: SqlClient = require("msnodesqlv8");
 
-            const connectionString: string = "server=.;Database=masa_school;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
-            const query: string = "SELEC * FROM white_board_type";
+            const connectionString: string = DB_CONNECTION_STRING;
+            const query: string = Queries.WhiteBoardTypes;
 
             sql.open(connectionString, (connectionError: Error, connection: Connection) => {
                 // Например, сервер не работает
                 if (connectionError) {
-                    const error: systemError = {
-                        code: ErrorCodes.ConnectionError,
-                        message: "SQL server connection error"
-                    }
-                    reject(error);
+                    reject(ErrorHelper.parseError(ErrorCodes.ConnectionError, General.DbconnectionError));
                 }
                 else {
                     connection.query(query, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
                         if (queryError) {
-                            const error: systemError = {
-                                code: ErrorCodes.queryError,
-                                message: "Incorrect query"
-                            };
-                            reject(error);
+                            reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }
                         else {
                             const result: whiteBoardType[] = [];

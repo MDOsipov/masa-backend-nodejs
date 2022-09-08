@@ -1,5 +1,6 @@
 import { Connection, SqlClient, Error } from "msnodesqlv8";
-import { whiteBoardType } from "../entities";
+import { whiteBoardType, systemError } from "../entities";
+import { ErrorCodes } from "../constants";
 
 interface localWhiteBoardType {
     id: number;
@@ -20,17 +21,27 @@ export class SchoolService implements ISchoolService {
             const query: string = "SELECT * FROM white_board_type";
 
             sql.open(connectionString, (connectionError: Error, connection: Connection) => {
-                connection.query(query, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
-                    const result: whiteBoardType[] = [];
-                    if (queryResult !== undefined) {
-                        queryResult.forEach(whiteBoardType => {
-                            result.push(
-                                this.parseLocalBoardType(whiteBoardType)
-                            )
-                        });
+                // Например, сервер не работает
+                if (connectionError !== null) {
+                    const error: systemError = {
+                        code: ErrorCodes.ConnectionError,
+                        message: "SQL server connection error"
                     }
-                    resolve(result);
-                })
+                    reject("Connection error!");
+                }
+                else {
+                    connection.query(query, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
+                        const result: whiteBoardType[] = [];
+                        if (queryResult !== undefined) {
+                            queryResult.forEach(whiteBoardType => {
+                                result.push(
+                                    this.parseLocalBoardType(whiteBoardType)
+                                )
+                            });
+                        }
+                        resolve(result);
+                    })
+                }
             });
         })
     };

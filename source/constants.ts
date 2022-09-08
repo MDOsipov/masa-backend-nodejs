@@ -12,4 +12,5 @@ export const DB_CONNECTION_STRING: string = "server=.;Database=masa_school;Trust
 
 export class Queries {
     public static WhiteBoardTypes: string = "SELECT * FROM white_board_type";
+    public static WhiteBoardTypeById: string = "SELECT * FROM white_board_type WHERE id = ";
 }

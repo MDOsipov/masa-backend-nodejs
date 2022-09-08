@@ -10,6 +10,7 @@ interface localWhiteBoardType {
 
 interface ISchoolService {
     getBoardTypes(): Promise<whiteBoardType[]>;
+    getBoardType(id: number): Promise<whiteBoardType>;
 };
 
 export class SchoolService implements ISchoolService {
@@ -48,6 +49,38 @@ export class SchoolService implements ISchoolService {
         })
     };
 
+    public getBoardType(id: number): Promise<whiteBoardType> {
+        let result: whiteBoardType;
+        return new Promise<whiteBoardType>((resolve, reject) => {
+
+            const sql: SqlClient = require("msnodesqlv8");
+
+            const connectionString: string = DB_CONNECTION_STRING;
+            const query: string = Queries.WhiteBoardTypeById;
+
+            sql.open(connectionString, (connectionError: Error, connection: Connection) => {
+                if (connectionError) {
+                    reject(ErrorHelper.parseError(ErrorCodes.ConnectionError, General.DbconnectionError));
+                }
+                else {
+                    connection.query(query, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
+                        if (queryError) {
+                            reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
+                        }
+                        else {
+                            if (queryResult !== undefined && queryResult.length === 1) {
+                                result = this.parseLocalBoardType(queryResult[0])
+                            }
+                            else if (queryResult !== undefined && queryResult.length === 0) {
+                                //TO DO: Not Found 
+                            }
+                            resolve(result);
+                        }
+                    })
+                }
+            });
+        });
+    }
 
     private parseLocalBoardType(local: localWhiteBoardType): whiteBoardType {
         return {

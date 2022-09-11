@@ -5,7 +5,9 @@ const router = express.Router();
 
 router.get('/general/board-types', controller.getBoardTypes);
 router.get('/general/board-type/:id', controller.getBoardType);
+router.put('/general/board-type/:id', controller.updateBoardType);
 
 
 
-export default { router };
+
+export default { router }; 

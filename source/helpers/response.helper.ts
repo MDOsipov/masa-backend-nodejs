@@ -13,6 +13,10 @@ export class ResponseHelper {
                 return response.status(406).json({
                     errorMessage: error.message
                 });
+            case ErrorCodes.NonNumericInput:
+                return response.setMaxListeners(406).json({
+                    errorMessage: error.message
+                })
             default:
                 return response.status(400).json({
                     errorMessage: error.message

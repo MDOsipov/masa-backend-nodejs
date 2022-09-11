@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { ErrorCodes } from '../constants';
+import { resolveProjectReferencePath } from 'typescript';
+import { ErrorCodes, General } from '../constants';
 import { systemError, whiteBoardType } from '../entities';
+import { ErrorHelper } from '../helpers/error.helpers';
 import { ResponseHelper } from '../helpers/response.helper';
 import { SchoolService } from '../services/school.services';
 
@@ -24,6 +26,8 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
 
     if (isNaN(Number(req.params.id))) {
         // ToDO: Error handling
+        const nonNumericError: systemError = ErrorHelper.parseError(ErrorCodes.NonNumericInput, General.NonNumericInput);
+        return ResponseHelper.handleError(res, nonNumericError);
     }
 
     if (sId !== null && sId !== undefined) {
@@ -46,7 +50,8 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
     }
     else {
         // TODO: Error handling
-
+        const noInputParameterError: systemError = ErrorHelper.parseError(ErrorCodes.InputParameterNotSupplied, General.InputParameterNotSupplied);
+        return ResponseHelper.handleError(res, noInputParameterError);
     }
 
 

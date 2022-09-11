@@ -15,9 +15,13 @@ export class General {
 
 }
 
+export class SqlParameters {
+    public static Id: string = 'id';
+}
+
 export const DB_CONNECTION_STRING: string = "server=.;Database=masa_school;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
 
 export class Queries {
     public static WhiteBoardTypes: string = "SELECT * FROM white_board_type";
-    public static WhiteBoardTypeById: string = "SELECT * FROM white_board_type WHERE id = ?";
+    public static WhiteBoardTypeById: string = `SELECT * FROM white_board_type WHERE id = ?`;
 }

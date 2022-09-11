@@ -3,9 +3,13 @@ import { ErrorHelper } from "./error.helpers";
 import { DB_CONNECTION_STRING } from "../constants";
 import { ErrorCodes, General } from "../constants";
 import { systemError } from "../entities";
+import { Request } from "mssql";
 
 export class SqlHelper {
     static sql: SqlClient = require("msnodesqlv8");
+    static mssql: SqlClient = require("mssql");
+
+    // FIXME: SQL injection
 
     public static executeQueryArrayResult<T>(query: string): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {

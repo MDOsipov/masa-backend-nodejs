@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ErrorCodes } from '../constants';
 import { systemError, whiteBoardType } from '../entities';
+import { ResponseHelper } from '../helpers/response.helper';
 import { SchoolService } from '../services/school.services';
 
 const schoolService: SchoolService = new SchoolService();
@@ -13,20 +14,7 @@ const getBoardTypes = async (req: Request, res: Response, next: NextFunction) =>
             });
         })
         .catch((error: systemError) => {
-            switch (error.code) {
-                case ErrorCodes.ConnectionError:
-                    return res.status(408).json({
-                        errorMessage: error.message
-                    });
-                case ErrorCodes.queryError:
-                    return res.status(406).json({
-                        errorMessage: error.message
-                    });
-                default:
-                    return res.status(400).json({
-                        errorMessage: error.message
-                    });
-            }
+            return ResponseHelper.handleError(res, error);
         });
 };
 
@@ -53,24 +41,12 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
                 });
             })
             .catch((error: systemError) => {
-                switch (error.code) {
-                    case ErrorCodes.ConnectionError:
-                        return res.status(408).json({
-                            errorMessage: error.message
-                        });
-                    case ErrorCodes.queryError:
-                        return res.status(406).json({
-                            errorMessage: error.message
-                        });
-                    default:
-                        return res.status(400).json({
-                            errorMessage: error.message
-                        });
-                }
+                return ResponseHelper.handleError(res, error);
             });
     }
     else {
         // TODO: Error handling
+
     }
 
 

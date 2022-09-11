@@ -8,4 +8,6 @@ const express_1 = __importDefault(require("express"));
 const school_controller_1 = __importDefault(require("../controllers/school.controller"));
 const router = express_1.default.Router();
 router.get('/general/board-types', school_controller_1.default.getBoardTypes);
+router.get('/general/board-type/:id', school_controller_1.default.getBoardType);
+router.put('/general/board-type/:id', school_controller_1.default.updateBoardType);
 exports.default = { router };

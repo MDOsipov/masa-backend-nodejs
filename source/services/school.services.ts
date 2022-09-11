@@ -11,6 +11,7 @@ interface localWhiteBoardType {
 interface ISchoolService {
     getBoardTypes(): Promise<whiteBoardType[]>;
     getBoardType(id: number): Promise<whiteBoardType>;
+    updateBoardType(white_board_type: whiteBoardType): Promise<void>;
 };
 
 export class SchoolService implements ISchoolService {
@@ -40,6 +41,20 @@ export class SchoolService implements ISchoolService {
                     reject(error);
                 });
         });
+    }
+
+    public updateBoardType(white_board_type: whiteBoardType): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            SqlHelper.executeQueryNoResult<localWhiteBoardType>(Queries.UpdateWhiteBoardTypeById, white_board_type.type, white_board_type.id)
+                .then(() => {
+                    console.log("Я тут 3");
+                    resolve();
+                })
+                .catch((error: systemError) => {
+                    console.log("Я тут 4");
+                    reject(error);
+                });
+        })
     }
 
     private parseLocalBoardType(local: localWhiteBoardType): whiteBoardType {

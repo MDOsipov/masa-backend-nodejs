@@ -46,15 +46,18 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
 };
 
 const updateBoardType = async (req: Request, res: Response, next: NextFunction) => {
-
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
+    console.log("Я тут!");
     if (typeof numericParamOrError === "number") {
         if (numericParamOrError > 0) {
-            schoolService.getBoardType(numericParamOrError)
-                .then((result: whiteBoardType) => {
-                    return res.status(200).json({
-                        result
-                    });
+            const body: whiteBoardType = req.body;
+            console.log("Я тут!2");
+            schoolService.updateBoardType({
+                id: numericParamOrError,
+                type: body.type
+            })
+                .then(() => {
+                    return res.sendStatus(200);
                 })
                 .catch((error: systemError) => {
                     return ResponseHelper.handleError(res, error);

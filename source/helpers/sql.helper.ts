@@ -34,12 +34,12 @@ export class SqlHelper {
         });
     }
 
-    public static executeQuerySingleResult<T>(query: string, param: number): Promise<T> {
+    public static executeQuerySingleResult<T>(query: string, ...params: (string | number)[]): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
                     const notFoundError: systemError = ErrorHelper.parseError(ErrorCodes.noData, General.noDataFound);
-                    connection.query(query, [param], (queryError: Error | undefined, queryResult: T[] | undefined) => {
+                    connection.query(query, params, (queryError: Error | undefined, queryResult: T[] | undefined) => {
                         if (queryError) {
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }
@@ -58,6 +58,28 @@ export class SqlHelper {
                             } else {
                                 reject(notFoundError);
                             }
+                        };
+                    });
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                })
+        });
+    }
+
+    public static executeQueryNoResult<T>(query: string, ...params: (string | number)[]): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            SqlHelper.SqlConnection()
+                .then((connection: Connection) => {
+                    connection.query(query, params, (queryError: Error | undefined) => {
+                        // console.log("query: ", query);
+                        // console.log("params: ", params);
+                        if (queryError) {
+                            console.log('Я тут 5');
+                            reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
+                        }
+                        else {
+                            resolve();
                         };
                     });
                 })

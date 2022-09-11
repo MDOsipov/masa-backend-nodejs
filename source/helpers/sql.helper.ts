@@ -30,12 +30,12 @@ export class SqlHelper {
         });
     }
 
-    public static executeQuerySingleResult<T>(query: string): Promise<T> {
+    public static executeQuerySingleResult<T>(query: string, param: number): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
                     const notFoundError: systemError = ErrorHelper.parseError(ErrorCodes.noData, General.noDataFound);
-                    connection.query(query, (queryError: Error | undefined, queryResult: T[] | undefined) => {
+                    connection.query(query, [param], (queryError: Error | undefined, queryResult: T[] | undefined) => {
                         if (queryError) {
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }

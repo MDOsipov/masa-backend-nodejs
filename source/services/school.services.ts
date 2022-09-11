@@ -25,11 +25,8 @@ export class SchoolService implements ISchoolService {
 
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
-                    connection.query(query, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
-                        if (queryError) {
-                            reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
-                        }
-                        else {
+                    SqlHelper.executeQueryArrayResult<localWhiteBoardType>(connection, Queries.WhiteBoardTypes)
+                        .then((queryResult: localWhiteBoardType[]) => {
                             const result: whiteBoardType[] = [];
                             if (queryResult !== undefined) {
                                 queryResult.forEach(whiteBoardType => {
@@ -38,15 +35,14 @@ export class SchoolService implements ISchoolService {
                                     )
                                 });
                             }
-                            resolve(result);
-                        }
-                    })
+                        })
                 })
                 .catch((error: systemError) => {
-                    reject(error);
+                    reject(error)
                 });
         });
-    };
+    }
+
 
     public getBoardType(id: number): Promise<whiteBoardType> {
         let result: whiteBoardType;
@@ -59,20 +55,13 @@ export class SchoolService implements ISchoolService {
 
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
-                    connection.query(`${query} ${id}`, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
-                        if (queryError) {
-                            reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
-                        }
-                        else {
-                            if (queryResult !== undefined && queryResult.length === 1) {
-                                result = this.parseLocalBoardType(queryResult[0])
-                            }
-                            else if (queryResult !== undefined && queryResult.length === 0) {
-                                //TO DO: Not Found 
-                            }
-                            resolve(result);
-                        }
-                    });
+                    SqlHelper.executeQuerySingleResult<localWhiteBoardType>(connection, `${Queries.WhiteBoardTypeById} ${id}`)
+                        .then((queryResult: localWhiteBoardType) => {
+                            resolve(this.parseLocalBoardType(queryResult));
+                        })
+                        .catch((error: systemError) => {
+                            reject(error);
+                        });
                 })
                 .catch((error: systemError) => {
                     reject(error);

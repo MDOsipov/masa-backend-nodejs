@@ -35,6 +35,8 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
     }
     else {
         // TODO: Error handling
+        const noInputParameterError: systemError = ErrorHelper.parseError(ErrorCodes.InputParameterNotSupplied, General.InputParameterNotSupplied);
+        return ResponseHelper.handleError(res, noInputParameterError);
     }
 
     if (id > 0) {
@@ -50,8 +52,7 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
     }
     else {
         // TODO: Error handling
-        const noInputParameterError: systemError = ErrorHelper.parseError(ErrorCodes.InputParameterNotSupplied, General.InputParameterNotSupplied);
-        return ResponseHelper.handleError(res, noInputParameterError);
+
     }
 
 

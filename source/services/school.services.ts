@@ -57,11 +57,8 @@ export class SchoolService implements ISchoolService {
             const connectionString: string = DB_CONNECTION_STRING;
             const query: string = Queries.WhiteBoardTypeById;
 
-            sql.open(connectionString, (connectionError: Error, connection: Connection) => {
-                if (connectionError) {
-                    reject(ErrorHelper.parseError(ErrorCodes.ConnectionError, General.DbconnectionError));
-                }
-                else {
+            SqlHelper.SqlConnection()
+                .then((connection: Connection) => {
                     connection.query(`${query} ${id}`, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
                         if (queryError) {
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
@@ -75,9 +72,11 @@ export class SchoolService implements ISchoolService {
                             }
                             resolve(result);
                         }
-                    })
-                }
-            });
+                    });
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
         });
     }
 

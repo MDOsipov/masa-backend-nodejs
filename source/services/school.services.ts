@@ -18,24 +18,16 @@ export class SchoolService implements ISchoolService {
     public getBoardTypes(): Promise<whiteBoardType[]> {
         return new Promise<whiteBoardType[]>((resolve, reject) => {
             const result: whiteBoardType[] = [];
-            const sql: SqlClient = require("msnodesqlv8");
-
-            const connectionString: string = DB_CONNECTION_STRING;
-            const query: string = Queries.WhiteBoardTypes;
 
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
-                    SqlHelper.executeQueryArrayResult<localWhiteBoardType>(connection, Queries.WhiteBoardTypes)
-                        .then((queryResult: localWhiteBoardType[]) => {
-                            const result: whiteBoardType[] = [];
-                            if (queryResult !== undefined) {
-                                queryResult.forEach(whiteBoardType => {
-                                    result.push(
-                                        this.parseLocalBoardType(whiteBoardType)
-                                    )
-                                });
-                            }
-                        })
+                    return SqlHelper.executeQueryArrayResult<localWhiteBoardType>(connection, Queries.WhiteBoardTypes)
+                })
+                .then((queryResult: localWhiteBoardType[]) => {
+                    queryResult.forEach(whiteBoardType => {
+                        result.push(this.parseLocalBoardType(whiteBoardType));
+                    });
+                    resolve(result);
                 })
                 .catch((error: systemError) => {
                     reject(error)
@@ -48,20 +40,12 @@ export class SchoolService implements ISchoolService {
         let result: whiteBoardType;
         return new Promise<whiteBoardType>((resolve, reject) => {
 
-            const sql: SqlClient = require("msnodesqlv8");
-
-            const connectionString: string = DB_CONNECTION_STRING;
-            const query: string = Queries.WhiteBoardTypeById;
-
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
-                    SqlHelper.executeQuerySingleResult<localWhiteBoardType>(connection, `${Queries.WhiteBoardTypeById} ${id}`)
-                        .then((queryResult: localWhiteBoardType) => {
-                            resolve(this.parseLocalBoardType(queryResult));
-                        })
-                        .catch((error: systemError) => {
-                            reject(error);
-                        });
+                    return SqlHelper.executeQuerySingleResult<localWhiteBoardType>(connection, `${Queries.WhiteBoardTypeById} ${id}`);
+                })
+                .then((queryResult: localWhiteBoardType) => {
+                    resolve(this.parseLocalBoardType(queryResult));
                 })
                 .catch((error: systemError) => {
                     reject(error);

@@ -1,10 +1,11 @@
 import { SqlClient, Connection, Error } from "msnodesqlv8";
 import { ErrorHelper } from "./error.helpers";
-import { DB_CONNECTION_STRING } from "../constants";
+import { DB_CONNECTION_STRING, Queries } from "../constants";
 import { ErrorCodes, General } from "../constants";
 import { systemError } from "../entities";
 import { query, Request } from "mssql";
 import { Query } from "msnodesqlv8";
+import { getOriginalNode } from "typescript";
 
 export class SqlHelper {
     static sql: SqlClient = require("msnodesqlv8");
@@ -68,15 +69,55 @@ export class SqlHelper {
         });
     }
 
+    public static createNew<T>(query: string, original: T, ...params: (string | number)[]): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+            SqlHelper.SqlConnection()
+                .then((connection: Connection) => {
+                    const queries: string[] = [query, Queries.SelectIdentity];
+
+                    const executeQuery: string = queries.join(';');
+                    const badQuerryError: systemError = ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError);
+                    let executionCounter: number = 0;
+                    connection.query(executeQuery, params, (queryError: Error | undefined, queryResult: T[] | undefined) => {
+                        if (queryError) {
+                            reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
+                        }
+                        else {
+                            executionCounter++;
+                            if (executionCounter === queries.length) {
+                                if (queryResult !== undefined) {
+                                    if (queryResult.length == 1) {
+                                        (original as any).id = (queryResult[0] as any).id;
+                                        resolve(original);
+                                    }
+                                    else {
+                                        reject(badQuerryError);
+                                    }
+                                }
+                                else {
+                                    reject(badQuerryError);
+                                };
+                            }
+
+                        }
+                    });
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                })
+        });
+    }
+
     public static executeQueryNoResult<T>(query: string, ...params: (string | number)[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
-                    const q: Query = connection.query(query, params, (queryError: Error | undefined) => {
+                    const q: Query = connection.query(query, params, (queryError: Error | undefined, rows: any) => {
                         if (queryError) {
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }
                     });
+
                     q.on('rowcount', (rowCount: number) => {
                         if (rowCount === 0) {
                             reject(ErrorHelper.parseError(ErrorCodes.noData, General.noDataFound));
@@ -84,6 +125,7 @@ export class SqlHelper {
                         }
                         resolve();
                     });
+
                 })
                 .catch((error: systemError) => {
                     reject(error);

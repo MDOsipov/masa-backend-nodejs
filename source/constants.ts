@@ -20,9 +20,13 @@ export class SqlParameters {
 }
 
 export const DB_CONNECTION_STRING: string = "server=.;Database=masa_school;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
+export const NON_EXISTENT_ID: number = -1;
 
 export class Queries {
     public static WhiteBoardTypes: string = "SELECT * FROM white_board_type";
     public static WhiteBoardTypeById: string = `SELECT * FROM white_board_type WHERE id = ?`;
     public static UpdateWhiteBoardTypeById: string = "UPDATE white_board_type SET white_board_type = ? WHERE id = ?";
+    public static AddWhiteBoardType: string = "INSERT INTO white_board_type (white_board_type) VALUES (?)";
+    public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id";
+
 }

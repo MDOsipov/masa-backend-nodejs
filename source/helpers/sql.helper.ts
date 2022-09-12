@@ -3,7 +3,8 @@ import { ErrorHelper } from "./error.helpers";
 import { DB_CONNECTION_STRING } from "../constants";
 import { ErrorCodes, General } from "../constants";
 import { systemError } from "../entities";
-import { Request } from "mssql";
+import { query, Request } from "mssql";
+import { Query } from "msnodesqlv8";
 
 export class SqlHelper {
     static sql: SqlClient = require("msnodesqlv8");
@@ -71,16 +72,17 @@ export class SqlHelper {
         return new Promise<void>((resolve, reject) => {
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
-                    connection.query(query, params, (queryError: Error | undefined) => {
-                        // console.log("query: ", query);
-                        // console.log("params: ", params);
+                    const q: Query = connection.query(query, params, (queryError: Error | undefined) => {
                         if (queryError) {
-                            console.log('Я тут 5');
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }
-                        else {
-                            resolve();
-                        };
+                    });
+                    q.on('rowcount', (rowCount: number) => {
+                        if (rowCount === 0) {
+                            reject(ErrorHelper.parseError(ErrorCodes.noData, General.noDataFound));
+                            return;
+                        }
+                        resolve();
                     });
                 })
                 .catch((error: systemError) => {

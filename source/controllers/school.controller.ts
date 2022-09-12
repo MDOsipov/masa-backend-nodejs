@@ -47,11 +47,9 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
 
 const updateBoardType = async (req: Request, res: Response, next: NextFunction) => {
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
-    console.log("Я тут!");
     if (typeof numericParamOrError === "number") {
         if (numericParamOrError > 0) {
             const body: whiteBoardType = req.body;
-            console.log("Я тут!2");
             schoolService.updateBoardType({
                 id: numericParamOrError,
                 type: body.type

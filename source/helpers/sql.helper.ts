@@ -98,7 +98,6 @@ export class SqlHelper {
                                     reject(badQuerryError);
                                 };
                             }
-
                         }
                     });
                 })
@@ -114,10 +113,16 @@ export class SqlHelper {
                 .then((connection: Connection) => {
                     const q: Query = connection.query(query, params, (queryError: Error | undefined, rows: any) => {
                         if (queryError) {
-                            reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
+                            switch (queryError.code) {
+                                case 547:
+                                    reject(ErrorHelper.parseError(ErrorCodes.DeletionConflict, General.DeletionConflict));
+                                    break;
+                                default:
+                                    reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
+                                    break;
+                            }
                         }
                     });
-
                     q.on('rowcount', (rowCount: number) => {
                         if (rowCount === 0) {
                             reject(ErrorHelper.parseError(ErrorCodes.noData, General.noDataFound));
@@ -125,7 +130,6 @@ export class SqlHelper {
                         }
                         resolve();
                     });
-
                 })
                 .catch((error: systemError) => {
                     reject(error);

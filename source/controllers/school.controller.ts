@@ -45,6 +45,28 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
     }
 };
 
+const deleteBoardTypeById = async (req: Request, res: Response, next: NextFunction) => {
+
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
+    if (typeof numericParamOrError === "number") {
+        if (numericParamOrError > 0) {
+            schoolService.deleteBoardTypeById(numericParamOrError)
+                .then(() => {
+                    return res.sendStatus(200);
+                })
+                .catch((error: systemError) => {
+                    return ResponseHelper.handleError(res, error);
+                });
+        }
+        else {
+            // TODO: Error handling
+        }
+    }
+    else {
+        return ResponseHelper.handleError(res, numericParamOrError);
+    }
+};
+
 const updateBoardType = async (req: Request, res: Response, next: NextFunction) => {
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
     if (typeof numericParamOrError === "number") {
@@ -88,4 +110,5 @@ const addBoardType = async (req: Request, res: Response, next: NextFunction) => 
     console.log('Я тут3!');
 }
 
-export default { getBoardTypes, getBoardType, updateBoardType, addBoardType };
+
+export default { getBoardTypes, getBoardType, updateBoardType, addBoardType, deleteBoardTypeById };

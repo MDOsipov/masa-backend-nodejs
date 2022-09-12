@@ -13,6 +13,7 @@ interface ISchoolService {
     getBoardType(id: number): Promise<whiteBoardType>;
     updateBoardType(white_board_type: whiteBoardType): Promise<whiteBoardType>;
     addBoardType(white_board_type: whiteBoardType): Promise<whiteBoardType>;
+    deleteBoardTypeById(id: number): Promise<void>;
 };
 
 export class SchoolService implements ISchoolService {
@@ -66,6 +67,18 @@ export class SchoolService implements ISchoolService {
                     reject(error);
                 });
         })
+    }
+
+    public deleteBoardTypeById(id: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            SqlHelper.executeQueryNoResult<localWhiteBoardType>(Queries.DeleteWhiteBoardType, id)
+                .then(() => {
+                    resolve();
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
+        });
     }
 
     private parseLocalBoardType(local: localWhiteBoardType): whiteBoardType {

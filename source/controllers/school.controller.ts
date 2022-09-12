@@ -54,8 +54,8 @@ const updateBoardType = async (req: Request, res: Response, next: NextFunction) 
                 id: numericParamOrError,
                 type: body.type
             })
-                .then(() => {
-                    return res.sendStatus(200);
+                .then((result: whiteBoardType) => {
+                    return res.status(200).json(result);
                 })
                 .catch((error: systemError) => {
                     return ResponseHelper.handleError(res, error);

@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/general/board-types', controller.getBoardTypes);
 router.get('/general/board-type/:id', controller.getBoardType);
 router.put('/general/board-type/:id', controller.updateBoardType);
-
+router.post('/general/board-type', controller.addBoardType);
 
 
 

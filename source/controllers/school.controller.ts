@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { resolveProjectReferencePath } from 'typescript';
-import { ErrorCodes, General } from '../constants';
+import { ErrorCodes, General, NON_EXISTENT_ID } from '../constants';
 import { systemError, whiteBoardType } from '../entities';
 import { ErrorHelper } from '../helpers/error.helpers';
 import { RequestHelper } from '../helpers/request.helper';
@@ -70,5 +70,22 @@ const updateBoardType = async (req: Request, res: Response, next: NextFunction) 
     }
 };
 
+const addBoardType = async (req: Request, res: Response, next: NextFunction) => {
+    const body: whiteBoardType = req.body;
 
-export default { getBoardTypes, getBoardType, updateBoardType };
+    schoolService.addBoardType({
+        id: NON_EXISTENT_ID,
+        type: body.type
+    })
+        .then((result: whiteBoardType) => {
+            console.log('Я тут1!');
+            return res.status(200).json(result);
+        })
+        .catch((error: systemError) => {
+            console.log('Я тут2!');
+            return ResponseHelper.handleError(res, error);
+        });
+    console.log('Я тут3!');
+}
+
+export default { getBoardTypes, getBoardType, updateBoardType, addBoardType };

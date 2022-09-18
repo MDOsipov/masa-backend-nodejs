@@ -1,23 +1,24 @@
 import { Response } from 'express';
 import { ErrorCodes } from '../constants';
 import { systemError } from "../entities";
+import { AppError } from '../enums';
 
 export class ResponseHelper {
     public static handleError(response: Response, error: systemError): Response<any, Record<string, any>> {
-        switch (error.code) {
-            case ErrorCodes.ConnectionError:
+        switch (error.key) {
+            case AppError.ConnectionError:
                 return response.status(408).json({
                     errorMessage: error.message
                 });
-            case ErrorCodes.queryError:
+            case AppError.queryError:
                 return response.status(406).json({
                     errorMessage: error.message
                 });
-            case ErrorCodes.NonNumericInput:
+            case AppError.NonNumericInput:
                 return response.setMaxListeners(406).json({
                     errorMessage: error.message
                 });
-            case ErrorCodes.noData:
+            case AppError.noData:
                 return response.setMaxListeners(404).json({
                     errorMessage: error.message
                 });

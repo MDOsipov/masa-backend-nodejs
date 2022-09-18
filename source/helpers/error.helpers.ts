@@ -1,11 +1,14 @@
+import * as _ from "underscore";
 import { systemError } from "../entities";
 
+
 export class ErrorHelper {
-    public static parseError(code: number, message: string): systemError {
-        const error: systemError = {
-            code,
-            message
-        }
-        return error;
-    };
+    // public static parseError(code: number, message: string): systemError {
+    //     const error: systemError = {
+    //         code,
+    //         message
+    //     }
+    //     return error;
+    // };
+
 }

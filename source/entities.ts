@@ -1,3 +1,5 @@
+import { AppError } from "./enums";
+
 export interface entityWithId {
     id: number;
 }
@@ -7,6 +9,7 @@ export interface whiteBoardType extends entityWithId {
 }
 
 export interface systemError {
+    key: AppError;
     code: number;
     message: string;
 }

@@ -5,9 +5,12 @@ import { systemError, whiteBoardType } from '../entities';
 import { ErrorHelper } from '../helpers/error.helpers';
 import { RequestHelper } from '../helpers/request.helper';
 import { ResponseHelper } from '../helpers/response.helper';
+import { ErrorService } from '../services/error.services';
 import { SchoolService } from '../services/school.services';
 
-const schoolService: SchoolService = new SchoolService();
+const errorService: ErrorService = new ErrorService();
+const schoolService: SchoolService = new SchoolService(errorService);
+
 
 const getBoardTypes = async (req: Request, res: Response, next: NextFunction) => {
     schoolService.getBoardTypes()
@@ -23,7 +26,7 @@ const getBoardTypes = async (req: Request, res: Response, next: NextFunction) =>
 
 const getBoardType = async (req: Request, res: Response, next: NextFunction) => {
 
-    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);
     if (typeof numericParamOrError === "number") {
         if (numericParamOrError > 0) {
             schoolService.getBoardType(numericParamOrError)
@@ -47,7 +50,7 @@ const getBoardType = async (req: Request, res: Response, next: NextFunction) => 
 
 const deleteBoardTypeById = async (req: Request, res: Response, next: NextFunction) => {
 
-    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);
     if (typeof numericParamOrError === "number") {
         if (numericParamOrError > 0) {
             schoolService.deleteBoardTypeById(numericParamOrError)
@@ -68,7 +71,7 @@ const deleteBoardTypeById = async (req: Request, res: Response, next: NextFuncti
 };
 
 const updateBoardType = async (req: Request, res: Response, next: NextFunction) => {
-    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);
     if (typeof numericParamOrError === "number") {
         if (numericParamOrError > 0) {
             const body: whiteBoardType = req.body;

@@ -3,6 +3,7 @@ import { ErrorCodes, General, DB_CONNECTION_STRING, Queries, TEMP_USER_ID } from
 import { SqlHelper } from "../helpers/sql.helper";
 import { Status } from "../enums"
 import { DateHelper } from "../helpers/date.helper";
+import { ErrorService } from "./error.services";
 
 
 interface localWhiteBoardType {
@@ -25,10 +26,12 @@ interface ISchoolService {
 
 export class SchoolService implements ISchoolService {
 
+    constructor(private errorService: ErrorService) { }
+
     public getBoardTypes(): Promise<whiteBoardType[]> {
         return new Promise<whiteBoardType[]>((resolve, reject) => {
             const result: whiteBoardType[] = [];
-            SqlHelper.executeQueryArrayResult<localWhiteBoardType>(Queries.WhiteBoardTypes, Status.Active)
+            SqlHelper.executeQueryArrayResult<localWhiteBoardType>(this.errorService, Queries.WhiteBoardTypes, Status.Active)
                 .then((queryResult: localWhiteBoardType[]) => {
                     queryResult.forEach(whiteBoardType => {
                         result.push(this.parseLocalBoardType(whiteBoardType));
@@ -43,7 +46,7 @@ export class SchoolService implements ISchoolService {
 
     public getBoardType(id: number): Promise<whiteBoardType> {
         return new Promise<whiteBoardType>((resolve, reject) => {
-            SqlHelper.executeQuerySingleResult<localWhiteBoardType>(Queries.WhiteBoardTypeById, id, Status.Active)
+            SqlHelper.executeQuerySingleResult<localWhiteBoardType>(this.errorService, Queries.WhiteBoardTypeById, id, Status.Active)
                 .then((queryResult: localWhiteBoardType) => {
                     resolve(this.parseLocalBoardType(queryResult));
                 })
@@ -57,7 +60,7 @@ export class SchoolService implements ISchoolService {
         return new Promise<whiteBoardType>((resolve, reject) => {
             const updateDate: Date = new Date();
             const updateUser: number = TEMP_USER_ID;
-            SqlHelper.executeQueryNoResult<whiteBoardType>(Queries.UpdateWhiteBoardTypeById, false, white_board_type.type, DateHelper.dateToString(updateDate), updateUser, white_board_type.id, Status.Active)
+            SqlHelper.executeQueryNoResult<whiteBoardType>(this.errorService, Queries.UpdateWhiteBoardTypeById, false, white_board_type.type, DateHelper.dateToString(updateDate), updateUser, white_board_type.id, Status.Active)
                 .then(() => {
                     resolve(white_board_type);
                 })
@@ -71,7 +74,7 @@ export class SchoolService implements ISchoolService {
         return new Promise<whiteBoardType>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
             const createUser: number = TEMP_USER_ID;
-            SqlHelper.createNew(Queries.AddWhiteBoardType, white_board_type, white_board_type.type, createDate, createDate, createUser, createUser, Status.Active)
+            SqlHelper.createNew(this.errorService, Queries.AddWhiteBoardType, white_board_type, white_board_type.type, createDate, createDate, createUser, createUser, Status.Active)
                 .then((result: entityWithId) => {
                     resolve(result as whiteBoardType);
                 })
@@ -85,7 +88,7 @@ export class SchoolService implements ISchoolService {
         return new Promise<void>((resolve, reject) => {
             const updateDate: Date = new Date();
             const updateUser: number = TEMP_USER_ID;
-            SqlHelper.executeQueryNoResult<localWhiteBoardType>(Queries.DeleteWhiteBoardType, true, DateHelper.dateToString(updateDate), updateUser, Status.NotActive, id, Status.Active)
+            SqlHelper.executeQueryNoResult<localWhiteBoardType>(this.errorService, Queries.DeleteWhiteBoardType, true, DateHelper.dateToString(updateDate), updateUser, Status.NotActive, id, Status.Active)
                 .then(() => {
                     resolve();
                 })

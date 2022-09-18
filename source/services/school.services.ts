@@ -55,7 +55,9 @@ export class SchoolService implements ISchoolService {
 
     public updateBoardType(white_board_type: whiteBoardType): Promise<whiteBoardType> {
         return new Promise<whiteBoardType>((resolve, reject) => {
-            SqlHelper.executeQueryNoResult<whiteBoardType>(Queries.UpdateWhiteBoardTypeById, false, white_board_type.type, white_board_type.id)
+            const updateDate: Date = new Date();
+            const updateUser: number = TEMP_USER_ID;
+            SqlHelper.executeQueryNoResult<whiteBoardType>(Queries.UpdateWhiteBoardTypeById, false, white_board_type.type, DateHelper.dateToString(updateDate), updateUser, white_board_type.id, Status.Active)
                 .then(() => {
                     resolve(white_board_type);
                 })

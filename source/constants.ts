@@ -32,4 +32,6 @@ export class Queries {
     public static AddWhiteBoardType: string = "INSERT INTO white_board_type (white_board_type, create_date, update_date, create_user_id, update_user_id, status_id) VALUES (?, ?, ?, ?, ?, ?)";
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id";
     public static DeleteWhiteBoardType: string = "UPDATE white_board_type SET update_date = ?, update_user_id = ?, status_id = ? WHERE id = ? AND status_id = ?";
+
+    public static GetUserByLogin: string = "SELECT id, password FROM [user] WHERE login = ?"
 }

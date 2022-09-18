@@ -16,6 +16,7 @@ export class SqlHelper {
 
     public static executeQueryArrayResult<T>(errorService: ErrorService, query: string, ...params: (string | number)[]): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
+            console.log(query, params);
             SqlHelper.SqlConnection(errorService)
                 .then((connection: Connection) => {
                     connection.query(query, params, (queryError: Error | undefined, queryResult: T[] | undefined) => {
@@ -64,6 +65,7 @@ export class SqlHelper {
                     });
                 })
                 .catch((error: systemError) => {
+                    console.log("Connection error!");
                     reject(error);
                 })
         });

@@ -10,4 +10,6 @@ const router = express_1.default.Router();
 router.get('/general/board-types', school_controller_1.default.getBoardTypes);
 router.get('/general/board-type/:id', school_controller_1.default.getBoardType);
 router.put('/general/board-type/:id', school_controller_1.default.updateBoardType);
+router.delete('/general/board-type/:id', school_controller_1.deleteBoardTypeById);
+
 exports.default = { router };

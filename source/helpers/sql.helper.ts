@@ -6,6 +6,7 @@ import { systemError } from "../entities";
 import { query, Request } from "mssql";
 import { Query } from "msnodesqlv8";
 import { getOriginalNode } from "typescript";
+import { entityWithId } from "../entities"
 
 export class SqlHelper {
     static sql: SqlClient = require("msnodesqlv8");
@@ -69,8 +70,8 @@ export class SqlHelper {
         });
     }
 
-    public static createNew<T>(query: string, original: T, ...params: (string | number)[]): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    public static createNew(query: string, original: entityWithId, ...params: (string | number)[]): Promise<entityWithId> {
+        return new Promise((resolve, reject) => {
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
                     const queries: string[] = [query, Queries.SelectIdentity];
@@ -78,7 +79,7 @@ export class SqlHelper {
                     const executeQuery: string = queries.join(';');
                     const badQuerryError: systemError = ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError);
                     let executionCounter: number = 0;
-                    connection.query(executeQuery, params, (queryError: Error | undefined, queryResult: T[] | undefined) => {
+                    connection.query(executeQuery, params, (queryError: Error | undefined, queryResult: entityWithId[] | undefined) => {
                         if (queryError) {
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }
@@ -87,7 +88,7 @@ export class SqlHelper {
                             if (executionCounter === queries.length) {
                                 if (queryResult !== undefined) {
                                     if (queryResult.length == 1) {
-                                        (original as any).id = (queryResult[0] as any).id;
+                                        original.id = (queryResult[0] as any).id;
                                         resolve(original);
                                     }
                                     else {

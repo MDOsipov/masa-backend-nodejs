@@ -1,4 +1,4 @@
-import { whiteBoardType, systemError } from "../entities";
+import { whiteBoardType, systemError, entityWithId } from "../entities";
 import { ErrorCodes, General, DB_CONNECTION_STRING, Queries, TEMP_USER_ID } from "../constants";
 import { SqlHelper } from "../helpers/sql.helper";
 import { Status } from "../enums"
@@ -71,9 +71,9 @@ export class SchoolService implements ISchoolService {
         return new Promise<whiteBoardType>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
             const createUser: number = TEMP_USER_ID;
-            SqlHelper.createNew<whiteBoardType>(Queries.AddWhiteBoardType, white_board_type, white_board_type.type, createDate, createDate, createUser, createUser, Status.Active)
-                .then((result: whiteBoardType) => {
-                    resolve(result);
+            SqlHelper.createNew(Queries.AddWhiteBoardType, white_board_type, white_board_type.type, createDate, createDate, createUser, createUser, Status.Active)
+                .then((result: entityWithId) => {
+                    resolve(result as whiteBoardType);
                 })
                 .catch((error: systemError) => {
                     reject(error);

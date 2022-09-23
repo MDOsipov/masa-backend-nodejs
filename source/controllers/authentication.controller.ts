@@ -7,15 +7,13 @@ import { systemError, whiteBoardType } from '../entities';
 import { ResponseHelper } from '../helpers/response.helper';
 import { AppError } from '../enums';
 import { TOKENSECRET } from "../constants";
+import { jwtUserData } from "../entities"
 
 interface localUser {
     login: string;
     password: string;
 }
 
-interface jwtUserData {
-    userId: number;
-}
 
 const errorService: ErrorService = new ErrorService();
 const authenticationService: AuthenticationService = new AuthenticationService(errorService);

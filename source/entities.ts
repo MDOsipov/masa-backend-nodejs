@@ -20,3 +20,7 @@ export interface sqlParameter {
     value: string | number;
 }
 
+export interface jwtUserData {
+    userId: number;
+}
+

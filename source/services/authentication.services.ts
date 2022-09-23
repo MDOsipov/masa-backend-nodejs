@@ -20,8 +20,6 @@ export class AuthenticationService implements IAuthenticationService {
         return new Promise<number>((resolve, reject) => {
             SqlHelper.executeQuerySingleResult<localUser>(this.errorService, Queries.GetUserByLogin, login)
                 .then((user: localUser) => {
-                    console.log(`Сравнение - ${password} и ${user.password}`);
-                    console.log(bcrypt.hashSync(password));
                     if (bcrypt.compareSync(password, user.password)) {
                         resolve(user.id);
                     }
@@ -30,9 +28,8 @@ export class AuthenticationService implements IAuthenticationService {
                     }
                 })
                 .catch((error: systemError) => {
-                    console.log("Some query error");
                     reject(error);
-                })
+                });
         });
     }
 }

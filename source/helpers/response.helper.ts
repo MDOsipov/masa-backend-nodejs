@@ -20,7 +20,6 @@ export class ResponseHelper {
                 });
             case AppError.noData:
                 if (isAuthentication) {
-                    console.log("Ошибка аутентификации!");
                     return response.sendStatus(403);
                 }
                 else {

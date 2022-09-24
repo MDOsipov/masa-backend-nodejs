@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { resolveProjectReferencePath } from 'typescript';
 import { ErrorCodes, General, NON_EXISTENT_ID } from '../constants';
-import { systemError, whiteBoardType } from '../entities';
+import { AuthenticatedRequest, systemError, whiteBoardType } from '../entities';
 import { ErrorHelper } from '../helpers/error.helpers';
 import { RequestHelper } from '../helpers/request.helper';
 import { ResponseHelper } from '../helpers/response.helper';
@@ -13,6 +13,7 @@ const schoolService: SchoolService = new SchoolService(errorService);
 
 
 const getBoardTypes = async (req: Request, res: Response, next: NextFunction) => {
+    console.log("User data: ", (req as AuthenticatedRequest).userData);
     schoolService.getBoardTypes()
         .then((result: whiteBoardType[]) => {
             return res.status(200).json({

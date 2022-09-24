@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { ErrorService } from '../services/error.services';
 import bcrypt from "bcryptjs";
 import { AuthenticationService } from '../services/authentication.services';
-import { systemError, whiteBoardType } from '../entities';
+import { authenticationToken, systemError, whiteBoardType } from '../entities';
 import { ResponseHelper } from '../helpers/response.helper';
 import { AppError } from '../enums';
 import { TOKENSECRET } from "../constants";
@@ -25,8 +25,12 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     authenticationService.login(user.login, user.password)
         .then((userData: jwtUserData) => {
 
+            const authenticationToken: authenticationToken = {
+                userData: userData
+            };
+
             const token: string = jwt.sign(
-                userData,
+                authenticationToken,
                 TOKENSECRET,
                 {
                     expiresIn: "2h"
@@ -42,5 +46,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         });
 
 }
+
+// const authorize = async (roles = []) {
+//     const user: localUser = req.body;
+//     console.log(user.roleId);
+// }
 
 export default { login };

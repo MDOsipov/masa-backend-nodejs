@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { TOKENSECRET } from "../constants";
-
-interface AuthenticatedRequest extends Request {
-    userId: number;
-}
+import { authenticationToken, jwtUserData, AuthenticatedRequest } from "../entities";
+import { Role } from "../enums"
 
 interface jwtBase {
-    userId: number;
+    userData: jwtUserData;
     exp: number;
     iat: number;
 }
@@ -23,7 +21,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     try {
         token = token.substring("Bearer ".length);
         const decoded: string | JwtPayload = jwt.verify(token, TOKENSECRET);
-        (req as AuthenticatedRequest).userId = (decoded as jwtBase).userId;
+        (req as AuthenticatedRequest).userData = (decoded as jwtBase).userData;
     } catch (err) {
         return res.status(401).send("Invalid Token");
     }

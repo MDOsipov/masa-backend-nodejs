@@ -23,13 +23,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const user: localUser = req.body;
 
     authenticationService.login(user.login, user.password)
-        .then((id: number) => {
-            const jwtUser: jwtUserData = {
-                userId: id
-            };
+        .then((userData: jwtUserData) => {
 
             const token: string = jwt.sign(
-                jwtUser,
+                userData,
                 TOKENSECRET,
                 {
                     expiresIn: "2h"

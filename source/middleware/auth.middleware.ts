@@ -19,10 +19,10 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
         return res.status(403).send("A token is required for authentication");
     }
 
+    // Bearer .............
     try {
         token = token.substring("Bearer ".length);
         const decoded: string | JwtPayload = jwt.verify(token, TOKENSECRET);
-        console.log(decoded);
         (req as AuthenticatedRequest).userId = (decoded as jwtBase).userId;
     } catch (err) {
         return res.status(401).send("Invalid Token");

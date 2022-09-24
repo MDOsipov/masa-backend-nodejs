@@ -54,7 +54,7 @@ const deleteBoardTypeById = async (req: Request, res: Response, next: NextFuncti
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);
     if (typeof numericParamOrError === "number") {
         if (numericParamOrError > 0) {
-            schoolService.deleteBoardTypeById(numericParamOrError)
+            schoolService.deleteBoardTypeById(numericParamOrError, (req as any).userData.userId)
                 .then(() => {
                     return res.sendStatus(200);
                 })
@@ -76,10 +76,11 @@ const updateBoardType = async (req: Request, res: Response, next: NextFunction) 
     if (typeof numericParamOrError === "number") {
         if (numericParamOrError > 0) {
             const body: whiteBoardType = req.body;
+
             schoolService.updateBoardType({
                 id: numericParamOrError,
                 type: body.type
-            })
+            }, (req as any).userData.userId)
                 .then((result: whiteBoardType) => {
                     return res.status(200).json(result);
                 })
@@ -102,16 +103,13 @@ const addBoardType = async (req: Request, res: Response, next: NextFunction) => 
     schoolService.addBoardType({
         id: NON_EXISTENT_ID,
         type: body.type
-    })
+    }, (req as any).userData.userId)
         .then((result: whiteBoardType) => {
-            console.log('Я тут1!');
             return res.status(200).json(result);
         })
         .catch((error: systemError) => {
-            console.log('Я тут2!');
             return ResponseHelper.handleError(res, error);
         });
-    console.log('Я тут3!');
 }
 
 

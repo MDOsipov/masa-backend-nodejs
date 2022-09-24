@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.get('/board-types', middleware.verifyToken, controller.getBoardTypes);
 router.get('/board-type/:id', controller.getBoardType);
-router.put('/board-type/:id', controller.updateBoardType);
-router.post('/board-type', controller.addBoardType);
-router.delete('/board-type/:id', controller.deleteBoardTypeById);
+router.put('/board-type/:id', middleware.verifyToken, controller.updateBoardType);
+router.post('/board-type', middleware.verifyToken, controller.addBoardType);
+router.delete('/board-type/:id', middleware.verifyToken, controller.deleteBoardTypeById);
 
 
 

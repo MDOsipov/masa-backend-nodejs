@@ -47,9 +47,4 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
 }
 
-// const authorize = async (roles = []) {
-//     const user: localUser = req.body;
-//     console.log(user.roleId);
-// }
-
 export default { login };

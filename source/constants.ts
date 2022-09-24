@@ -23,7 +23,6 @@ export class SqlParameters {
 
 export const DB_CONNECTION_STRING: string = "server=.;Database=masa_school;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
 export const NON_EXISTENT_ID: number = -1;
-export const TEMP_USER_ID: number = 1;
 export const TOKENSECRET: string = "a59ccae2-29a5-467f-b623-1050f6970b3b";
 
 export class Queries {

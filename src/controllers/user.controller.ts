@@ -13,6 +13,27 @@ import bcrypt from "bcryptjs";
 const errorService: ErrorService = new ErrorService();
 const userService: UserService = new UserService(errorService);
 
+const getUserById = async (req: Request, res: Response, next: NextFunction) => {
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);
+    if (typeof numericParamOrError === "number") {
+        if (numericParamOrError > 0) {
+            userService.getUserById(numericParamOrError)
+                .then((result: user) => {
+                    return res.status(200).json(result);
+                })
+                .catch((error: systemError) => {
+                    return ResponseHelper.handleError(res, error);
+                });
+        }
+        else {
+            // TODO: Error handling
+        }
+    }
+    else {
+        return ResponseHelper.handleError(res, numericParamOrError);
+    }
+};
+
 const deleteById = async (req: Request, res: Response, next: NextFunction) => {
 
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);

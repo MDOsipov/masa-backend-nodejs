@@ -15,6 +15,18 @@ export class UserService implements IUserService {
 
     constructor(private errorService: ErrorService) { }
 
+    public getUserById(userId: number): Promise<user> {
+        return new Promise<user>((resolve, reject) => {
+            SqlHelper.executeQuerySingleResult<user>(this.errorService, Queries.GetUserById, userId, Status.Active)
+                .then((user: user) => {
+                    resolve(user);
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
+        })
+    }
+
     public updateById(user: user, userId: number): Promise<user> {
         return new Promise<user>((resolve, reject) => {
             const updateDate: Date = new Date();

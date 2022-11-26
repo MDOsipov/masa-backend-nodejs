@@ -34,6 +34,8 @@ export class Queries {
     public static DeleteWhiteBoardType: string = "UPDATE white_board_type SET update_date = ?, update_user_id = ?, status_id = ? WHERE id = ? AND status_id = ?";
 
     public static GetUserByLogin: string = "SELECT id, password, role_id FROM [user] WHERE login = ?"
+    public static GetUserById: string = "SELECT id, password, role_id FROM [user] WHERE id = ? AND status_id = ?"
+
 
     public static UpdateUserById: string = "UPDATE [user] SET first_name = ?, last_name = ?, update_date = ?, update_user_id = ? WHERE id = ? AND status_id = ?";
     public static DeleteUserById: string = "UPDATE [user] SET update_date = ?, update_user_id = ?, status_id = ? WHERE id = ? AND status_id = ?";

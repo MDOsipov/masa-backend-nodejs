@@ -3,13 +3,15 @@ import * as http from "http";
 import cors from "cors";
 import { RouteConfig } from "./framework/route.config";
 import { UserRoutes } from "./modules/user/user.routes";
+import { SchoolRoutes } from "./modules/school/school.routes";
+
 
 const routes: Array<RouteConfig> = [];
 const app: Express = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = 6060;
+const PORT: number = 6060;
 
 // if (process.env.DEBUG) {
 //     process.on("unhandledRejection", (reason) => {
@@ -18,6 +20,7 @@ const PORT = 6060;
 // }
 
 routes.push(new UserRoutes(app));
+routes.push(new SchoolRoutes(app));
 
 app.get("/", (req: Request, res: Response) => {
     res.send("Welcome world");

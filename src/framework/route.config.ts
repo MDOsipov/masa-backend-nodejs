@@ -1,18 +1,27 @@
-import express, { Application } from "express"
+import express, { Application } from "express";
+
 export abstract class RouteConfig {
-    app: Application;
-    name: string;
-    protected baseUrl: String;
+    private _app: Application;
+    private _name: string;
+    private _baseUrl: string;
 
     constructor(app: Application, name: string, baseUrl: string) {
-        this.app = app;
-        this.name = name;
-        this.baseUrl = baseUrl;
+        this._app = app;
+        this._name = name;
+        this._baseUrl = baseUrl;
         this.configureRoutes();
     }
 
-    getName() {
-        return this.name;
+    protected get baseUrl(): string {
+        return this._baseUrl;
+    }
+
+    protected get app(): Application {
+        return this._app;
+    }
+
+    public getName() {
+        return this._name;
     }
 
     abstract configureRoutes(): Application;

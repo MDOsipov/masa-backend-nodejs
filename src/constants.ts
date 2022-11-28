@@ -24,6 +24,7 @@ export class SqlParameters {
 export const DB_CONNECTION_STRING: string = "server=.;Database=masa_school;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
 export const NON_EXISTENT_ID: number = -1;
 export const TOKENSECRET: string = "a59ccae2-29a5-467f-b623-1050f6970b3b";
+export const DEFAULT_LOG_FOLDER: string = "logs";
 
 export class Queries {
     public static WhiteBoardTypes: string = "SELECT * FROM white_board_type WHERE status_id = ?";
@@ -33,7 +34,7 @@ export class Queries {
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id";
     public static DeleteWhiteBoardType: string = "UPDATE white_board_type SET update_date = ?, update_user_id = ?, status_id = ? WHERE id = ? AND status_id = ?";
 
-    public static GetUserByLogin: string = "SELECT id, role_id FROM [user] WHERE login = ?"
+    public static GetUserByLogin: string = "SELECT id, role_id, password FROM [user] WHERE login = ?"
     public static GetUsers: string = "SELECT id, first_name, last_name, login, password FROM [user] WHERE status_id = ?";
     public static GetUserById: string = "SELECT id, first_name, last_name, login, password FROM [user] WHERE id = ? AND status_id = ?";
     public static UpdateUserById: string = "UPDATE [user] SET first_name = ?, last_name = ?, update_date = ?, update_user_id = ? WHERE id = ? AND status_id = ?";

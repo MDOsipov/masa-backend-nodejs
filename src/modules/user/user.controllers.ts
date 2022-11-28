@@ -5,6 +5,7 @@ import { ResponseHelper } from "../../framework/response.helper";
 import UserService from './user.services';
 import bcrypt from "bcryptjs";
 import { NON_EXISTENT_ID } from "../../constants";
+import LoggerService from "../../core/logger.services";
 
 class UserController {
     constructor() {
@@ -22,6 +23,7 @@ class UserController {
     };
 
     async getUserById(req: Request, res: Response, next: NextFunction) {
+        LoggerService.debug("getUserById method start");
         const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
         if (typeof numericParamOrError === "number") {
             if (numericParamOrError > 0) {

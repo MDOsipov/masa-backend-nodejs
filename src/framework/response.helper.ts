@@ -2,9 +2,11 @@ import { Response } from 'express';
 import { ErrorCodes } from '../constants';
 import { systemError } from "../entities";
 import { AppError } from '../enums';
+import LoggerService from '../core/logger.services';
 
 export class ResponseHelper {
     public static handleError(response: Response, error: systemError, isAuthentication: boolean = false): Response<any, Record<string, any>> {
+        LoggerService.error(error.message, "Code: ", error.code);
         switch (error.key) {
             case AppError.ConnectionError:
                 return response.status(408).json({

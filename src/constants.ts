@@ -33,10 +33,9 @@ export class Queries {
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id";
     public static DeleteWhiteBoardType: string = "UPDATE white_board_type SET update_date = ?, update_user_id = ?, status_id = ? WHERE id = ? AND status_id = ?";
 
-    public static GetUserByLogin: string = "SELECT id, password, role_id FROM [user] WHERE login = ?"
-    public static GetUserById: string = "SELECT id, password, role_id FROM [user] WHERE id = ? AND status_id = ?"
-
-
+    public static GetUserByLogin: string = "SELECT id, role_id FROM [user] WHERE login = ?"
+    public static GetUsers: string = "SELECT id, first_name, last_name, login, password FROM [user] WHERE status_id = ?";
+    public static GetUserById: string = "SELECT id, first_name, last_name, login, password FROM [user] WHERE id = ? AND status_id = ?";
     public static UpdateUserById: string = "UPDATE [user] SET first_name = ?, last_name = ?, update_date = ?, update_user_id = ? WHERE id = ? AND status_id = ?";
     public static DeleteUserById: string = "UPDATE [user] SET update_date = ?, update_user_id = ?, status_id = ? WHERE id = ? AND status_id = ?";
     public static AddUser: string = "INSERT INTO [user] (first_name, last_name, login, password, role_id, create_date, update_date, create_user_id, update_user_id, status_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

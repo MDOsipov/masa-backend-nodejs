@@ -5,7 +5,6 @@ import { TOKENSECRET } from "../../constants";
 import { authenticationToken, systemError, whiteBoardType, jwtUserData } from '../../entities';
 import { ResponseHelper } from "../../framework/response.helper";
 
-
 interface localUser {
     login: string;
     password: string;

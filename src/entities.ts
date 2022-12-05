@@ -1,4 +1,4 @@
-import { AppError, Role } from "./enums";
+import { AppError, Role, Status } from "./enums";
 import { Request, Response, NextFunction } from "express";
 
 
@@ -36,6 +36,21 @@ export interface user extends entityWithId {
     lastName: string;
     login?: string;
     password?: string;
+}
+
+export interface entityBase extends entityWithId {
+    createDate?: string;
+    updateDate?: string;
+    createUser?: user;
+    updateUser?: user;
+    statusId?: Status;
+}
+
+export interface ClassRoom extends entityBase {
+    roomNumber: number;
+    roomFloor: number;
+    isHasProjector: boolean;
+    whiteBoardType: whiteBoardType;
 }
 
 export interface AuthenticatedRequest extends Request, authenticationToken { }
